@@ -7,8 +7,6 @@ using namespace std;
 
 class Agenda {
 	
-	//SISTEMA MAPA REFERÊNCIA: https://www.youtube.com/watch?v=-v1et3Cs7xY
-	
 	public:
 	string tabela[100][9]; 
 	int contador_registro; //CADA LINHA DA TABELA
@@ -23,6 +21,8 @@ class Agenda {
 		string nome, email, enderec, tel, dia, mes, ano, obsv;
 		
 		//Do while para confirmar o cadastro
+		//O cadastro é refeito se o usuário inserir o valor "R" ou "r"
+		//A lógica, então, é: Faça{ cadastro }Enquanto(usuário digitar "R" ou "r")
 		do{
 			
 			tabela[contador_registro][0] = to_string(contador_registro + 1); //ID DO REGISTRO //ID COMEÇA EM 1
@@ -74,14 +74,14 @@ class Agenda {
 		if(resposta == "C"){
 			
 			contador_registro++; //AUTO_INCREMENT //LIBERA O MECANISMO DE BUSCA DO MENU (CONDIÇÃO: > 0)
-			return 1; //RETORNA TRUE
+			return 1; //RETORNA "TRUE"
 			
 		}else if(resposta == "S"){
 			
 			//NESSE CASO O CONTADOR NÃO É INCREMENTADO EM UM
 			//ENTÃO MESMO QUE A TABELA TENHA OS DADOS, O PROGRAMA NÃO DISPONIBILIZA O MECANISMO DE PROCURA POR REGISTROS
 			
-			return 0; //RETORNA FALSE
+			return 0; //RETORNA "FALSE"
 			
 		}
 			
@@ -125,8 +125,7 @@ class Agenda {
 					cout << "Ação:";
 					getline(cin, pesquisa_escolhida);
 					
-					//ANTES ERA UM SWITCH-CASE DOS CASOS DE PESQUISA, MAS HOUVE UM ERRO NO INPUT QUE DESCONHEÇO A CAUSA
-					//ENFIM: CASO POR NOME
+					//CASO POR NOME
 					if(pesquisa_escolhida == "N" || pesquisa_escolhida == "n"){
 						
 						cout << "Digite o nome da pessoa em letra minúscula: ";
@@ -140,6 +139,7 @@ class Agenda {
 								//SE A COLUNA, DO REGISTRO ATUAL, TIVER UM NOME IGUAL AO DIGITADO PELO USUÁRIO
 								if(tabela[linha][1] == pnome){ 
 									
+									//IMPRIME O REGISTRO ATUAL
 									cout << "\n --> ID:" << tabela[linha][0] << "|Nome:" << tabela[linha][1] << "|Email:" << tabela[linha][2] << "|Endereço:" << tabela[linha][3] << "|Telefone:" << tabela[linha][4] 
 									<< "|Nascimento:" << tabela[linha][5] << "/" << tabela[linha][6] << "/" << tabela[linha][7] << "|Observação:" << tabela[linha][8]; 
 											
@@ -165,6 +165,7 @@ class Agenda {
 								//SE A COLUNA MÊS, DO REGISTRO ATUAL, TIVER UM VALOR IGUAL AO DIGITADO PELO USUÁRIO
 								if(tabela[linha][6] == pmes){ 
 									
+									//IMPRIME O REGISTRO ATUAL
 									cout << "\n --> ID:" << tabela[linha][0] << "|Nome:" << tabela[linha][1] << "|Email:" << tabela[linha][2] << "|Endereço:" << tabela[linha][3] << "|Telefone:" << tabela[linha][4] 
 									<< "|Nascimento:" << tabela[linha][5] << "/" << tabela[linha][6] << "/" << tabela[linha][7] << "|Observação:" << tabela[linha][8]; 
 									
@@ -194,6 +195,7 @@ class Agenda {
 								//SE A COLUNA MÊS E DIA, DO REGISTRO ATUAL, TIVEREM VALORES IGUAIS AOS DIGITADOS PELO USUÁRIO
 								if(tabela[linha][5] == pdia && tabela[linha][6] == pmes){ 
 									
+									//IMPRIME O REGISTRO ATUAL
 									cout << "\n --> ID:" << tabela[linha][0] << "|Nome:" << tabela[linha][1] << "|Email:" << tabela[linha][2] << "|Endereço:" << tabela[linha][3] << "|Telefone:" << tabela[linha][4] 
 									<< "|Nascimento:" << tabela[linha][5] << "/" << tabela[linha][6] << "/" << tabela[linha][7] << "|Observação:" << tabela[linha][8]; 
 									
@@ -231,14 +233,18 @@ class Agenda {
 		getline(cin, id);
 		
 		//ESSA REMOÇÃO É UMA GAMBIARRA TENEBROSA, PORQUE O ARRAY CONTINUA COM O REGISTRO, MAS COM VALORES 'NULL'
-		//PARA O USUÁRIO PARECE UMA REMOÇÃO, PORQUE A PESQUISA SÓ É REALIZADA POR VALORES DIFERENTES DE 'NULL'
+		//PARA O USUÁRIO PARECE UMA REMOÇÃO, PORQUE A PESQUISA BUSCA VALORES DIFERENTES DE 'NULL'
+		//ASSIM, OS REGISTROS REMOVIDOS, ISTO É, COM 'NULL', NÃO APARECEM NA LISTAGEM
 		
 		for(int linha = 0; linha <= contador_registro; linha++){
 			
 			//SE O ID INFORMADO FOR IGUAL AO DO REGISTRO ATUAL
 			if(tabela[linha][0] == id){
 				
+				//PERCORRE CADA COLUNA/CAMPO DO REGISTRO ATUAL
 				for(int coluna = 0; coluna < 9; coluna++){
+					
+					//ATRIBUI O VALOR "NULL" PARA CADA CAMPO
 					tabela[linha][coluna] = "NULL";
 				}				
 			}	
@@ -268,7 +274,7 @@ int main() {
 	
 	setlocale(LC_ALL, "Portuguese");
 		
-	Agenda ExecInst; //INSTANCIA SE MANTÉM ENQUANTO O PROGRAMA NÃO FOR FINALIZADO, POR ISSO O NOME "EXECINST"
+	Agenda ExecInst; //INSTÂNCIA DA CLASSE AGENDA // SE MANTÉM ENQUANTO O PROGRAMA NÃO FOR FINALIZADO, POR ISSO O NOME "EXECINST"
 	string resposta; //VARIÁVEL PARA GRAVAR A AÇÃO DO USUÁRIO NO MENU
 	
 	cout << "================================= Inicialização do sistema de agenda =================================\n";
@@ -280,10 +286,13 @@ int main() {
 		
 		cout << "\n --> Para cadastrar uma nova pessoa digite C. \n";
 		cout << " --> Para finalizar o programa digite F. \n";
-		if(ExecInst.contador_registro > 0){
+		
+		if(ExecInst.contador_registro > 0){	
+			//ESSES SÃO LIBERADOS NO MENU QUANDO O ATRIBUTO "CONTADOR_REGISTRO", DA CLASSE AGENDA, FOR MAIOR DO QUE ZERO
 			cout << " --> Foram detectados " << ExecInst.contador_registro << " registros. Para realizar uma pesquisa específica digite B1, e para listar todos os registros digite B2.\n";
 			cout << "--> Para excluir um registro digite D. \n";
 		}
+		
 		cout << "Ação: ";
 		getline(cin, resposta);
 		
@@ -294,7 +303,7 @@ int main() {
 				ExecInst.contador_registro += 1;
 				cout << "\nCadastro realizado com sucesso!\n";	
 			}else{
-				cout << "\nOps! O cadastro falhou!\n";
+				cout << "\nO cadastro foi cancelado!\n";
 			}
 			
 		}else if(resposta == "B1" || resposta == "b1"){
@@ -312,12 +321,15 @@ int main() {
 		}
 		
 		else if((resposta != "C" && resposta != "c") && (resposta != "B" && resposta != "b") && (resposta != "D" && resposta != "d") && (resposta != "F" && resposta != "f")){
+			//SE O USUÁRIO DIGITAR UM VALOR DIFERENTE DOS QUE O DIRECIONAM PARA UM SEGMENTO DO SISTEMA
 
 			cout << "Erro! Valor inválido!\n";
 		}
 		
-			
+	//O PROGRAMA CONTINUA RODANDO ENQUANTO O USUÁRIO NÃO DIGITAR F/f OU O CONTADOR DE REGISTROS FOR MENOS DO QUE 100
 	}while(resposta != "F" && resposta != "f" && ExecInst.contador_registro < 100);
+	
+	//AQUI O USUÁRIO SAIU DO SISTEMA, E ELE É FINALIZADO
 	
 	cout << "================================= Finalização do sistema de agenda =================================\n";
 	cout << "...........Cadastros realizados: " << ExecInst.contador_registro << "...........\n";
